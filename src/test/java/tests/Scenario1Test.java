@@ -59,11 +59,15 @@ public class Scenario1Test extends BaseTest {
 
         try {
             waitHelper.waitForElementVisible(searchResultPage.getFilterBadgeLocator(), 30);
+            new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(30))
+                    .until(org.openqa.selenium.support.ui.ExpectedConditions.textToBePresentInElementLocated(
+                            searchResultPage.getFilterBadgeLocator(), "3"));
+
             boolean isFilterApplied = searchResultPage.verifyFiltersApplied(3);
-            Assert.assertTrue(isFilterApplied, "VERIFICATION FAILED: Badge tidak muncul/angka tidak sesuai!");
+            Assert.assertTrue(isFilterApplied, "VERIFICATION FAILED: Badge muncul tapi angka tidak sesuai!");
         } catch (Exception e) {
             TestListenerUI.getTest().log(Status.FAIL, "Step 5 Gagal: " + e.getMessage());
-            Assert.fail("Badge filter tidak ditemukan setelah menunggu 30 detik");
+            Assert.fail("Badge filter (3) tidak ditemukan setelah menunggu 30 detik!");
         }
 
         TestListenerUI.getTest().log(Status.INFO, "Step 6: Mengeklik badge filter.");
