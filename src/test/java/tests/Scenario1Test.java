@@ -36,8 +36,8 @@ public class Scenario1Test extends BaseTest {
         TestListenerUI.getTest().log(Status.INFO, "Step 1: Navigasi kategori: " + mainCategory);
         homePage.clickShopByCategory();
         homePage.selectMainCategory(mainCategory);
-        waitHelper.waitForUrlToContain("/b/", 15);
-        Assert.assertTrue(driver.getCurrentUrl().contains("/b/"), "ASSERT FAILED: Gagal ke Main Category!");
+        waitHelper.waitForUrlToContain("ebay.com/b/", 30);
+        Assert.assertTrue(driver.getCurrentUrl().contains("/b/"), "ASSERT FAILED: Gagal menavigasi ke Main Category dalam 30 detik!");
 
         TestListenerUI.getTest().log(Status.INFO, "Step 2: Navigasi sub-kategori: " + subCategory);
         categoryPage.selectLeftHandNavigation(subCategory);

@@ -25,8 +25,8 @@ public class WaitHelper {
         return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    // Metode tambahan untuk Scenario1Test
     public void waitForUrlToContain(String fraction, int timeout) {
+        System.out.println("Menunggu URL mengandung: " + fraction);
         new WebDriverWait(driver, Duration.ofSeconds(timeout))
                 .until(ExpectedConditions.urlContains(fraction));
     }
