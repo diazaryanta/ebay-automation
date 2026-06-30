@@ -11,6 +11,7 @@ import pages.HomePage;
 import pages.SearchResultPage;
 import utils.ConfigReader;
 import utils.TestListenerUI;
+import utils.WaitHelper;
 
 @Listeners(utils.TestListenerUI.class)
 public class Scenario1Test extends BaseTest {
@@ -21,6 +22,7 @@ public class Scenario1Test extends BaseTest {
         CategoryPage categoryPage = new CategoryPage(driver);
         SearchResultPage searchResultPage = new SearchResultPage(driver);
         FilterPage filterPage = new FilterPage(driver);
+        WaitHelper waitHelper = new WaitHelper(driver);
 
         String mainCategory = ConfigReader.getProperty("ebay.category.main");
         String subCategory = ConfigReader.getProperty("ebay.category.sub");
@@ -28,33 +30,37 @@ public class Scenario1Test extends BaseTest {
         String priceId = ConfigReader.getProperty("ebay.filter.price.id");
         String locationId = ConfigReader.getProperty("ebay.filter.location.id");
 
-        TestListenerUI.getTest().log(Status.INFO, "Memulai pengujian dan memastikan URL awal adalah eBay.");
-        Assert.assertTrue(driver.getCurrentUrl().contains("ebay.com"), "ASSERT FAILED: Tidak berada di halaman eBay!");
+        TestListenerUI.getTest().log(Status.INFO, "Memulai pengujian.");
+        Assert.assertTrue(driver.getCurrentUrl().contains("ebay.com"), "ASSERT FAILED: Tidak di eBay!");
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 1: Navigasi ke kategori utama: " + mainCategory);
+        TestListenerUI.getTest().log(Status.INFO, "Step 1: Navigasi kategori: " + mainCategory);
         homePage.clickShopByCategory();
         homePage.selectMainCategory(mainCategory);
-        Assert.assertTrue(driver.getCurrentUrl().contains("/b/"), "ASSERT FAILED: Gagal menavigasi ke halaman Main Category!");
+        waitHelper.waitForUrlToContain("/b/", 15);
+        Assert.assertTrue(driver.getCurrentUrl().contains("/b/"), "ASSERT FAILED: Gagal ke Main Category!");
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 2: Navigasi menu kiri memilih sub-kategori: " + subCategory);
+        TestListenerUI.getTest().log(Status.INFO, "Step 2: Navigasi sub-kategori: " + subCategory);
         categoryPage.selectLeftHandNavigation(subCategory);
-        Assert.assertTrue(driver.getTitle().contains("Cell Phone") || driver.getTitle().contains("Smartphones"), "ASSERT FAILED: Gagal menavigasi ke Sub-Kategori!");
+        waitHelper.waitForTitleToContain("Cell", 15);
+        Assert.assertTrue(driver.getTitle().contains("Cell Phone") || driver.getTitle().contains("Smartphones"), "ASSERT FAILED: Gagal ke Sub-Kategori!");
 
         TestListenerUI.getTest().log(Status.INFO, "Step 3: Membuka pop-up All Filters.");
         searchResultPage.clickAllFilters();
-        Assert.assertTrue(filterPage.isPopupDisplayed(), "ASSERT FAILED: Pop-up 'All Filters' tidak muncul atau gagal diklik!");
+        waitHelper.waitForElementVisible(filterPage.getPopupLocator(), 15);
+        Assert.assertTrue(filterPage.isPopupDisplayed(), "ASSERT FAILED: Pop-up tidak muncul!");
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 4: Menerapkan 3 filter (Condition: " + condition + ", Price, dan Location).");
+        TestListenerUI.getTest().log(Status.INFO, "Step 4: Menerapkan 3 filter.");
         filterPage.applyConditionFilter(condition);
         filterPage.applyPriceFilter(priceId);
         filterPage.applyItemLocationFilter(locationId);
         filterPage.clickApply();
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 5: Memverifikasi badge angka filter (3) muncul pada tombol filter utama.");
+        TestListenerUI.getTest().log(Status.INFO, "Step 5: Verifikasi badge filter (3).");
+        waitHelper.waitForElementVisible(searchResultPage.getFilterBadgeLocator(), 20);
         boolean isFilterApplied = searchResultPage.verifyFiltersApplied(3);
-        Assert.assertTrue(isFilterApplied, "VERIFICATION FAILED: Filter badge (3) tidak ditemukan pada tombol filter setelah di-apply!");
+        Assert.assertTrue(isFilterApplied, "VERIFICATION FAILED: Filter badge (3) tidak ditemukan!");
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 6: Mengeklik badge '3 filters applied' di atas hasil pencarian.");
+        TestListenerUI.getTest().log(Status.INFO, "Step 6: Mengeklik badge filter.");
         searchResultPage.clickAppliedFilterBadge();
     }
 }

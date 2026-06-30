@@ -101,5 +101,11 @@ public class SearchResultPage {
             System.out.println("Polling timeout: Gagal menemukan judul setelah berulang kali mencoba.");
             return "Judul tidak ditemukan";
         }
+
     }
+
+    public By getFilterBadgeLocator() {
+        return By.cssSelector("li.brwr__item.brwr__item--applied");
+    }
+
 }

@@ -17,10 +17,16 @@ public class BaseTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
 
-        options.addArguments("--headless=new");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--window-size=1920,1080");
+        String isCI = System.getenv("CI");
+
+        if (isCI != null && isCI.equals("true")) {
+            System.out.println("Running in CI/CD mode (Headless)");
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+        } else {
+            System.out.println("Running in Local mode (Visible Browser)");
+        }
 
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));

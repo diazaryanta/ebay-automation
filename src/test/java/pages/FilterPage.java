@@ -121,4 +121,8 @@ public class FilterPage {
             return false;
         }
     }
+
+    public By getPopupLocator() {
+        return applyFiltersButton;
+    }
 }
