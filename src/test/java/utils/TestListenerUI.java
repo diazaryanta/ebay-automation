@@ -7,10 +7,12 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import base.BaseTest;
 
 public class TestListenerUI implements ITestListener {
     private ExtentReports extent = ExtentReportManager.getInstance();
     public static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+
     public static ExtentTest getTest() {
         return test.get();
     }
@@ -32,11 +34,13 @@ public class TestListenerUI implements ITestListener {
 
         try {
             Object testClass = result.getInstance();
-            WebDriver driver = ((base.BaseTest) testClass).getDriver();
+            if (testClass instanceof BaseTest) {
+                WebDriver driver = ((BaseTest) testClass).getDriver();
 
-            if (driver != null) {
-                String base64Screenshot = TestUtils.getBase64Screenshot(driver);
-                test.get().addScreenCaptureFromBase64String(base64Screenshot, "Screenshot on Failure");
+                if (driver != null) {
+                    String base64Screenshot = TestUtils.getBase64Screenshot(driver);
+                    test.get().addScreenCaptureFromBase64String(base64Screenshot, "Screenshot on Failure");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
