@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="eBay Test Suite">
+    <test name="eBay Scenarios">
+        <classes>
+            <class name="tests.Scenario1Test" />
+            <class name="tests.Scenario2SearchTest" />
+        </classes>
+    </test>
+</suite>
