@@ -7,9 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test-scenario-1:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,12 +22,38 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Tests
-        run: ./gradlew test
+      - name: Run Scenario 1
+        run: ./gradlew test --tests tests.Scenario1Test
 
-      - name: Upload Report
+      - name: Upload Report Scenario 1
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: report-scenario-1
+          path: reports/ExtentReport.html
+
+  test-scenario-2:
+    needs: test-scenario-1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Scenario 2
+        run: ./gradlew test --tests tests.Scenario2SearchTest
+
+      - name: Upload Report Scenario 2
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-scenario-2
           path: reports/ExtentReport.html
