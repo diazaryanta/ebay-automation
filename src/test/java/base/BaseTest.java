@@ -36,7 +36,12 @@ public class BaseTest {
     @AfterClass
     public void tearDown() {
         if (driver != null) {
-            driver.quit();
+            try {
+                driver.manage().deleteAllCookies();
+                driver.quit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
