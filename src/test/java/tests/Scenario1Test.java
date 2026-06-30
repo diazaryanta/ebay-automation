@@ -55,10 +55,16 @@ public class Scenario1Test extends BaseTest {
         filterPage.applyItemLocationFilter(locationId);
         filterPage.clickApply();
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 5: Verifikasi badge filter (3).");
-        waitHelper.waitForElementVisible(searchResultPage.getFilterBadgeLocator(), 20);
-        boolean isFilterApplied = searchResultPage.verifyFiltersApplied(3);
-        Assert.assertTrue(isFilterApplied, "VERIFICATION FAILED: Filter badge (3) tidak ditemukan!");
+        TestListenerUI.getTest().log(Status.INFO, "Step 5: Verifikasi badge filter.");
+
+        try {
+            waitHelper.waitForElementVisible(searchResultPage.getFilterBadgeLocator(), 30);
+            boolean isFilterApplied = searchResultPage.verifyFiltersApplied(3);
+            Assert.assertTrue(isFilterApplied, "VERIFICATION FAILED: Badge tidak muncul/angka tidak sesuai!");
+        } catch (Exception e) {
+            TestListenerUI.getTest().log(Status.FAIL, "Step 5 Gagal: " + e.getMessage());
+            Assert.fail("Badge filter tidak ditemukan setelah menunggu 30 detik");
+        }
 
         TestListenerUI.getTest().log(Status.INFO, "Step 6: Mengeklik badge filter.");
         searchResultPage.clickAppliedFilterBadge();

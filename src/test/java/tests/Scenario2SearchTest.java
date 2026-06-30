@@ -9,6 +9,7 @@ import pages.HomePage;
 import pages.SearchResultPage;
 import utils.ConfigReader;
 import utils.TestListenerUI;
+import utils.WaitHelper;
 
 @Listeners(utils.TestListenerUI.class)
 public class Scenario2SearchTest extends BaseTest {
@@ -17,6 +18,7 @@ public class Scenario2SearchTest extends BaseTest {
     public void testProductSearch() {
         HomePage homePage = new HomePage(driver);
         SearchResultPage searchResultPage = new SearchResultPage(driver);
+        WaitHelper waitHelper = new WaitHelper(driver);
 
         String keyword = ConfigReader.getProperty("ebay.search.keyword");
         String category = ConfigReader.getProperty("ebay.search.category");
@@ -25,6 +27,7 @@ public class Scenario2SearchTest extends BaseTest {
         Assert.assertTrue(driver.getCurrentUrl().contains("ebay.com"), "ASSERT FAILED: URL tidak sesuai!");
 
         TestListenerUI.getTest().log(Status.INFO, "Step 2: Mengetikkan kata kunci '" + keyword + "' pada Search Bar.");
+        waitHelper.waitForElementVisible(org.openqa.selenium.By.id("gh-ac"), 15);
         homePage.enterSearchKeyword(keyword);
 
         TestListenerUI.getTest().log(Status.INFO, "Step 3: Mengeklik tombol Search.");
@@ -32,6 +35,7 @@ public class Scenario2SearchTest extends BaseTest {
 
         searchResultPage.isPageReady();
         String urlSafeKeyword = keyword.replace(" ", "+");
+        waitHelper.waitForUrlToContain("nkw=" + urlSafeKeyword, 15);
         Assert.assertTrue(driver.getCurrentUrl().contains("nkw=" + urlSafeKeyword), "ASSERT FAILED: URL pencarian gagal dimuat!");
 
         TestListenerUI.getTest().log(Status.INFO, "Step 4: Mengganti Search Category menjadi '" + category + "'.");
@@ -41,12 +45,11 @@ public class Scenario2SearchTest extends BaseTest {
         Assert.assertTrue(driver.getCurrentUrl().contains("sch"), "ASSERT FAILED: URL kategori gagal dimuat!");
 
         TestListenerUI.getTest().log(Status.INFO, "Step 5: Memverifikasi bahwa halaman termuat sepenuhnya.");
-        boolean isLoaded = searchResultPage.isPageReady();
-        Assert.assertTrue(isLoaded, "ASSERT FAILED: Halaman tidak termuat dengan sempurna!");
+        Assert.assertTrue(searchResultPage.isPageReady(), "ASSERT FAILED: Halaman tidak termuat!");
 
-        TestListenerUI.getTest().log(Status.INFO, "Step 6: Memverifikasi nama hasil produk pertama mencakup kata kunci pencarian.");
+        TestListenerUI.getTest().log(Status.INFO, "Step 6: Memverifikasi judul produk.");
         String firstProductTitle = searchResultPage.getFirstResultTitle();
-        TestListenerUI.getTest().log(Status.INFO, "Judul produk pertama yang ditemukan: " + firstProductTitle);
+        TestListenerUI.getTest().log(Status.INFO, "Judul produk: " + firstProductTitle);
 
         String[] wordsToCheck = keyword.toLowerCase().split(" ");
         boolean containsAllKeywords = true;
@@ -61,6 +64,6 @@ public class Scenario2SearchTest extends BaseTest {
         }
 
         Assert.assertTrue(containsAllKeywords,
-                "VERIFICATION FAILED: Judul produk (" + firstProductTitle + ") tidak mengandung kata: '" + kataYangBikinGagal + "' dari keyword asli!");
+                "VERIFICATION FAILED: Judul produk (" + firstProductTitle + ") tidak mengandung kata: '" + kataYangBikinGagal + "'!");
     }
 }

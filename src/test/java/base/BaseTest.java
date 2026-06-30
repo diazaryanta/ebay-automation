@@ -24,6 +24,8 @@ public class BaseTest {
             options.addArguments("--headless=new");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36");
+            options.addArguments("--disable-blink-features=AutomationControlled");
         } else {
             System.out.println("Running in Local mode (Visible Browser)");
         }
