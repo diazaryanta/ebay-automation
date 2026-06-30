@@ -111,7 +111,15 @@ public class FilterPage {
     }
 
     public void clickApply() {
-        wait.waitForClickable(applyFiltersButton).click();
+        try {
+            wait.waitForClickable(applyFiltersButton).click();
+        } catch (Exception e) {
+            System.out.println("Klik tombol Apply dengan cara natural gagal, mencoba JS...");
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].click();", driver.findElement(applyFiltersButton));
+        }
+        new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(15))
+                .until(org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated(By.cssSelector("li.brwr__item.brwr__item--applied")));
     }
 
     public boolean isPopupDisplayed() {
